@@ -1,0 +1,111 @@
+---
+title: "The Evolution of Baby Names"
+author: "Abhishek Shankar"
+output:
+  html_document:
+    df_print: paged
+    pdf_document: default
+---
+
+```{r, echo=FALSE, include=FALSE}
+library(ggplot2)
+library(plotly)
+library(tidyverse)
+
+nationalNames <- read.csv("~/Documents/InfoRubiks/baby names/NationalNames.csv")
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+greater1000 <- subset(nationalNames, Count >= 1000)
+greater1000
+# compute percentage differences per year.
+uniqueNames <- nationalNames$Name %>% unique()
+```
+
+## Examples of Names Which Spiked in Popularity
+
+### Lebron
+
+```{r, echo=FALSE, include=TRUE}
+lebron <- subset(nationalNames, Name == 'LeBron' | Name == 'Lebron')
+p <- ggplot(lebron, aes(x=Year, y=Count, color=Gender)) + geom_line() + geom_point()
+ggplotly(p)
+```
+
+Prior to 2003, instances of males named Lebron never exceed 15. Lebron James becomes the first pick of the NBA draft in 2003 and in the same year wins the Rookie of the Year award. The name continues to spike and in 2004, Lebron James is chosen for his first NBA All-Star pick. 2004 sees 96 instances of the name with the greatest frequency occuring in 2007 with 110 instances. 2010 is the beginning of a steep decline in the popularity of the name. 
+
+### Kanye
+
+```{r, echo=FALSE, include=TRUE}
+kanye <- subset(nationalNames, Name == 'Kanye')
+p <- ggplot(kanye, aes(x=Year, y=Count, color=Gender)) + geom_line() + geom_point() + xlim(1900, 2018)
+ggplotly(p)
+```
+
+Prior to 2002, there are no recorded instances of the name Kanye amongst the American public. Kanye West releases The College Dropout in 2004 and the number of instances spikes to 507. The name has seen a few female instances, however its popularity and hype amongst the male population has ended.
+
+### Woodrow
+
+```{r, echo=FALSE, include=TRUE}
+woodrow <- subset(nationalNames, Name == 'Woodrow')
+p <- ggplot(woodrow, aes(x=Year, y=Count, color=Gender)) + geom_line() + geom_point()
+ggplotly(p)
+```
+
+Woodrow Wilson becomes a popular presidential candidate in 1911 and wins the presidency in the 1912 election. Throughout his presidency (1913 - 1921), large spikes in popularity of the name accumulate with the peak occuring in 1918 with 3358 instances, resulting in a 2675% popularity spike. Post presidency sees the name still being a popular choice, with instances of the name occuring well into the 2000s. Post 1918 sees a steep decline from its peak and it continues to decline until his death in 1924 which sees a slight, perhaps negligible increase.
+
+Woodrow Wilson's presidential campain resulted in the first recorded instances of females with the name, which may have been a result of his 1918 speech before Congress endorsing a woman's national right to vote, however this is questionable and inconclusive.
+
+### Whitney
+
+```{r, echo=FALSE, include=TRUE}
+whitney <- subset(nationalNames, Name == 'Whitney')
+p <- ggplot(whitney, aes(x=Year, y=Count, color=Gender)) + geom_line() + geom_point()
+ggplotly(p)
+```
+
+Initially a male name with Anglo-Saxon origins, Whitney sees a meteroric rise in the female population with the emergence of Whitney Houston. 1986 sees Houston winning 7 AMA awards and alongside her self-titled debut album reaching #1, peak occurances of 9532 women is recorded. Alongside this, 1986 sees the number of males with the name peaking with 245.
+
+### Jacqueline
+
+```{r, echo=FALSE, include=TRUE}
+jacqueline <- subset(nationalNames, Name == 'Jacqueline')
+p <- ggplot(jacqueline, aes(x=Year, y=Count, color=Gender)) + geom_line() + geom_point()
+ggplotly(p)
+```
+
+Jacqueline has been a consistently popular female name since the 1920s, but most likely reached its peak popularity in the 60s. Jacqueline Kennedy was regarded as an international fashion icon and became the first lady of the United States of America in 1961 which corresponds to approximately twice the number of people with the name from the previous year with 10,983. 1964 saw the nearly 12,000 instances of the name and this likely corresponds to the assassination of JFK in late November 1963.
+
+### Arya
+
+```{r, echo=FALSE, include=TRUE}
+arya <- subset(nationalNames, Name == 'Arya')
+p <- ggplot(arya, aes(x=Year, y=Count, color=Gender)) + geom_line() + geom_point()
+ggplotly(p)
+```
+
+Arya is a name of Indo-Iranian origin and prior to the mid 2000s was equally unisex, since similar proportions of males and females shared the name. First instances of the name were recorded in 1982 and may be as a result of the large Iranian immigration the US after the Iranian revolution in 1979. The most significant growth occurs post 2010 which corresponds to the mainstream popularity of the Game of Thrones (GoT) character, Arya Stark. The first season of GoT was released in 2011 which saw 387 recorded instances of the name and every successive year has seen an increase with 2014 being the current peak with 1544 instances.
+
+### todo: an analysis on unisex names.
+
+
+```{r, echo=FALSE}
+## Unisex Names
+
+#Names that are considered unisex would require an approximate 50/50 distribution of males and females sharing the #name.
+
+unisex <- split(greater1000, greater1000$Gender)
+
+unisex$F <- subset(unisex$F, Count >= 5000)
+unisex$M <- subset(unisex$M, Count >= 5000)
+
+df <- merge(x=unisex$F, y=unisex$M, by='Name', all = FALSE)
+
+male <- unisex$M
+female <- unisex$F
+
+df <- merge(x=male,y=female, by="Name")
+
+```
+
